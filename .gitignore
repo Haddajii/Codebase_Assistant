@@ -59,7 +59,8 @@ htmlcov/
 .coverage.*
 
 # Vector databases
-chroma_langchain_db/
+github_assistant/chroma_langchain_db/
 
 # Runtime data
-data/
+
+github_assistant/data/
