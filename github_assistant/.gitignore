@@ -57,3 +57,9 @@ Thumbs.db
 htmlcov/
 .coverage
 .coverage.*
+
+# Vector databases
+chroma_langchain_db/
+
+# Runtime data
+data/

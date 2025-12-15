@@ -1,6 +1,7 @@
 import os
 import shutil
 import stat
+import hashlib
 from git import Repo
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -8,6 +9,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 def remove_readonly(func, path, excinfo):
     os.chmod(path, stat.S_IWRITE)
     func(path)
+
+def repo_id_from_url(url: str) -> str:
+    return hashlib.md5(url.encode()).hexdigest()
+
 
 def clone_repo(repo_url: str, repo_dir="data/repo_tmp"):
     if os.path.exists(repo_dir):
@@ -21,7 +26,7 @@ def load_repo_files(repo_dir):
     docs = []
     for root, _, files in os.walk(repo_dir):
         for f in files:
-            if f.endswith(".java"):  # only Java files
+            if f.endswith(".java"):  
                 path = os.path.join(root, f)
                 with open(path, encoding="utf-8") as file:
                     content = file.read()
