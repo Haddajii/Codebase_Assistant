@@ -1,10 +1,8 @@
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
-import os
 
 def get_vector_store(documents, repo_id):
     persist_dir = f"./chroma_langchain_db/{repo_id}"
-    os.makedirs(persist_dir, exist_ok=True)
 
     embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
@@ -14,7 +12,10 @@ def get_vector_store(documents, repo_id):
         persist_directory=persist_dir
     )
 
-    if len(vector_store.get()["ids"]) == 0:
+    if vector_store._collection.count() == 0:
+        print("Building embeddings (first time)...")
         vector_store.add_documents(documents)
+    else:
+        print("Using cached embeddings")
 
     return vector_store

@@ -30,23 +30,42 @@ def clone_repo(repo_url: str, base_dir="data"):
 def load_repo_files(repo_dir):
     docs = []
 
-    for root, _, files in os.walk(repo_dir):
+    ALLOWED_EXTENSIONS = {
+        ".java", ".py", ".js", ".ts", ".jsx", ".tsx",
+        ".json", ".yml", ".yaml", ".xml", ".properties",
+        ".md", ".txt"
+    }
+
+    EXCLUDED_DIRS = {
+        ".git", "node_modules", "target", "build", "dist",
+        "__pycache__", ".idea", ".vscode"
+    }
+
+    for root, dirs, files in os.walk(repo_dir):
+        dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS]
+
         for file in files:
-            if file.endswith(".java"):  # keep it strict for now
+            ext = os.path.splitext(file)[1]
+
+            if ext in ALLOWED_EXTENSIONS:
                 path = os.path.join(root, file)
                 try:
                     with open(path, encoding="utf-8", errors="ignore") as f:
                         content = f.read()
+
                         docs.append(
                             Document(
                                 page_content=content,
-                                metadata={"source": path}
+                                metadata={
+                                    "source": path,
+                                    "extension": ext
+                                }
                             )
                         )
                 except Exception as e:
-                    print(f"❌ Failed to read {path}: {e}")
+                    print(f"Failed to read {path}: {e}")
 
-    print(f"Loaded {len(docs)} source files")
+    print(f"Loaded {len(docs)} files")
     return docs
 
 # ---------- Split ----------

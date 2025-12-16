@@ -19,14 +19,21 @@ Question:
 )
 
 def answer_from_docs(docs, question: str):
-    if not docs:
-        context = "No context available"
-    else:
-        context = "\n\n".join(doc.page_content for doc in docs)
+    sources = sorted(set(
+        doc.metadata.get("source", "unknown")
+        for doc in docs
+    ))
+
+    context = "\n\n".join(
+        f"File: {doc.metadata.get('source', 'unknown')}\n{doc.page_content}"
+        for doc in docs
+    )
+
 
     final_prompt = prompt.format(
         context=context,
         question=question
     )
 
-    return llm.invoke(final_prompt)
+    answer =  llm.invoke(final_prompt)
+    return answer , sources 
