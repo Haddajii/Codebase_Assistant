@@ -15,8 +15,6 @@ export default function ChatPage({ repoId }) {
 
     try {
       const data = await askQuestion(repoId, input);
-
-      // simulate typing effect
       setLoading(false);
       let botText = "";
       const botMsg = { sender: "bot", text: "", sources: data.sources || [] };
