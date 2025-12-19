@@ -7,8 +7,28 @@ prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="""
 You are a helpful coding assistant.
-Answer the question using ONLY the context below.
-If the answer is not in the context, say "I don't know".
+
+RULES:
+- Answer using ONLY the Context below. If not found, say: "I don't know based on the provided repo context."
+- Output MUST be valid Markdown.
+- Prefer a structured format with headings and lists.
+
+FORMAT:
+## Answer
+(1-3 paragraphs max)
+
+## Steps (if applicable)
+1. ...
+2. ...
+
+## Code (if applicable)
+Use fenced code blocks with a language tag, for example:
+```js
+// code here
+```
+
+## Notes (optional)
+- ...
 
 Context:
 {context}
@@ -36,4 +56,4 @@ def answer_from_docs(docs, question: str):
     )
 
     answer =  llm.invoke(final_prompt)
-    return answer , sources 
+    return answer , sources

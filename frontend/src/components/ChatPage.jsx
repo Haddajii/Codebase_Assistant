@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { askQuestion } from "../api";
+import MarkdownMessage from "./MarkdownMessage";
 
 export default function ChatPage({ repoId }) {
   const [messages, setMessages] = useState([{ sender: "bot", text: "Hi! How can I help you with this repo?", sources: [] }]);
@@ -61,7 +62,7 @@ export default function ChatPage({ repoId }) {
               lineHeight: "1.6",
               boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
             }}>
-              {m.text}
+              {m.sender === "bot" ? <MarkdownMessage text={m.text} /> : m.text}
               {m.sender === "bot" && m.sources && m.sources.length > 0 && (
                 <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "1px solid #ddd", fontSize: "12px", color: "#666" }}>
                   <strong>Sources:</strong>
